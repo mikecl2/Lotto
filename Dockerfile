@@ -6,9 +6,21 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Write Streamlit config directly - no .streamlit folder needed in repo
+RUN mkdir -p .streamlit && echo '\
+[server]\n\
+port = 8501\n\
+address = "0.0.0.0"\n\
+headless = true\n\
+enableCORS = false\n\
+enableXsrfProtection = false\n\
+\n\
+[browser]\n\
+gatherUsageStats = false\n\
+' > .streamlit/config.toml
+
 # Copy app code
 COPY app.py .
-COPY .streamlit/ .streamlit/
 
 EXPOSE 8501
 
